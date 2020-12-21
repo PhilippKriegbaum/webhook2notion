@@ -8,22 +8,34 @@ from flask import request
 app = Flask(__name__)
 
 
-def createNotionTask(token, collectionURL, content):
+def createNotionTask(token, collectionURL, wr_title, wr_date, wr_kind, wr_customer, wr_hours, wr_details, wr_remote):
     # notion
     client = NotionClient(token)
     cv = client.get_collection_view(collectionURL)
     row = cv.collection.add_row()
-    row.title = content
+    row.Name = wr_title
+    row.Datum = wr_date
+    row.Art = wr_kind
+    row.Kunde = wr_customer
+    row.Stunden = wr_hours
+    row.Beschreibung = wr_details
+    row.Remote = wr_remote
 
 
-@app.route('/create_todo', methods=['GET'])
-def create_todo():
+@app.route('/create_workingrecord', methods=['GET'])
+def create_workingrecord():
 
-    todo = request.args.get('todo')
+    wr_title = request.args.get('title')
+    wr_date = request.args.get('date')
+    wr_kind = request.args.get('kind')
+    wr_customer = request.args.get('customer')
+    wr_hours = request.args.get('hours')
+    wr_details = request.args.get('details')
+    wr_remote = request.args.get('remote')
     token_v2 = os.environ.get("TOKEN")
     url = os.environ.get("URL")
-    createNotionTask(token_v2, url, todo)
-    return f'added {todo} to Notion'
+    createNotionTask(token_v2, url, wr_title, wr_date, wr_kind, wr_customer, wr_hours, wr_details, wr_remote)
+    return f'added {wr_title} to Notion'
 
 
 if __name__ == '__main__':
